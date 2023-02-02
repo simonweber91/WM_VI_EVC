@@ -20,6 +20,10 @@ function create_rois_from_prob_maps(p, roi_name)
 % Simon Weber, sweber@bccn-berlin.de, 2021
 
 in_dir = fullfile(p.base_dir, 'Rois', 'ProbAtlas_v4/subj_vol_all');
+if ~exist(in_dir,'dir')
+    error('Cannot find probability atlas to create ROIs. Please store ''ProbAtlas_v4'' in ''%s''', fullfile(p.base_dir, 'Rois/'))
+end
+
 out_dir = fullfile(p.base_dir, 'Rois');
 
 switch roi_name

@@ -12,7 +12,7 @@ function vviq = vviq_load(p)
 % Simon Weber, sweber@bccn-berlin.de, 2021
 
 % Load questionnaire data
-load(fullfile(p.base_dir,'Questionnaire', 'recruitment', 'VVIQ.mat'));
+load(fullfile(p.base_dir, 'Vviq', 'recruitment', 'VVIQ.mat'));
 vviq = VVIQ.vviq;
 
 % Apply exclusion criteria

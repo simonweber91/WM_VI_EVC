@@ -3,11 +3,6 @@ function analyse_mri(p)
 % Run the preprocessing, modeling and reconstruction of the fMRI data, and
 % plot the results.
 
-% Set up the BIDS file structure for each subject
-bids_setup(p);
-% Convert Dicom to Nifti images
-dicom2nifti_bids(p);
-
 % Run preprocessing of fMRI data
 mri_preprocessing(p);
 

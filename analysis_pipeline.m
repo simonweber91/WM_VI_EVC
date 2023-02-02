@@ -84,6 +84,9 @@ p.psvr.n_perm           = 1000;                                             % Nu
 % p.par.n_workers         = 30;                                             % Number of parallel workers 
 
 
+%%% Create folder strcutures, prepare data
+setup_analysis(p)
+
 %%% Analyse data of the VVIQ questionnaire used for recruiting %%%
 analyse_questionnaire(p);
 
