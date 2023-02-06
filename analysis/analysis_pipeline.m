@@ -22,7 +22,7 @@
 %%% Add analysis scripts and required toolboxes to the search path %%%
 
 % Analysis scripts
-addpath(genpath('/analysis/sweber/projects/visimg/Code/VisualImagery_paper/'));
+addpath(genpath('/analysis/sweber/projects/visimg/Code/VisualImagery_paper/analysis/'));
 %addpath(genpath('/.../VisualImagery_paper/'));
 
 % Toolboxes
