@@ -1,5 +1,7 @@
 function setup_directories(p)
 
+% Create all directories that are necessary for the following analyses.
+% This is where data/results are stored.
 
 dicom_dir = fullfile(p.base_dir, 'Dicom');
 if ~exist(dicom_dir,'dir')

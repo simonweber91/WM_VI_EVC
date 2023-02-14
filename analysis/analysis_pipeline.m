@@ -22,17 +22,14 @@
 %%% Add analysis scripts and required toolboxes to the search path %%%
 
 % Analysis scripts
-addpath(genpath('/analysis/sweber/projects/visimg/Code/VisualImagery_paper/analysis/'));
-%addpath(genpath('/.../VisualImagery_paper/'));
+addpath(genpath('/.../VisualImagery_paper/analysis/'));
 
 % Toolboxes
 % 1. SPM12
-addpath('/analysis/sweber/toolboxes/spm12/');
-% addpath('/.../spm12/');
+addpath('/.../spm12/');
 % 2. The Decoding Toolbox (TDT), version 3.999E or higher
 % https://sites.google.com/site/tdtdecodingtoolbox/
-addpath(genpath('/analysis/sweber/toolboxes/tdt_3.999F/'))
-% addpath('/.../tdt_3.999F');
+addpath('/.../tdt_3.999F');
 
 
 %%% Shuffle randomization seed for permutation analysis %%%
@@ -44,8 +41,7 @@ rng('shuffle')
 
 % Basic paramters
 p.OVERWRITE             = 0;                                                % Do you want to overwrite already existing result files? Really???
-% p.base_dir              = '/...';                                         % Base directory of the project, where all the stuff is stored. Should have a 'Dicom' folder in it. 
-p.base_dir              = '/analysis/sweber/projects/visimg_git_test';    
+p.base_dir              = '/...';                                         % Base directory of the project, where all the stuff is stored. Should have a 'Dicom' folder in it.    
 
 % Number of sessions/runs-per-session/trials-per-run of the experiment
 p.n_session             = 2;                                                % Number of fMRI scanning sessions
