@@ -1,8 +1,11 @@
-function fss_sim_wrapper
+
+%%% Add analysis scripts and required toolboxes to the search path %%%
 
 addpath('/.../VisualImagery_paper/extended/fss_simulation/');
 addpath('/.../VisualImagery_paper/analysis/general_purpose/');
 addpath('/.../tdt_3.999F');
+
+%%% Create structure with key parameters %%%
 
 p.base_dir = '/...';   
 
@@ -15,26 +18,34 @@ p.sim.n_run = 8;                         % number of runs
 p.sim.n_trial = 40;                      % trials per run
 
 
+%%% Run Simulation %%%
+
+% Get relevant variables
 n_fwhm = numel(p.sim.fwhm);
 n_snr = numel(p.sim.snr);
 total_trials = p.sim.n_run*p.sim.n_trial;                     % total number of trials
 
+% Preallocate result variable
 bfca = zeros(n_fwhm, n_snr, p.sim.n_reps);
 
-fprintf('REPS: %d - SNR: %d - FWHM: %d \n', p.sim.n_reps, n_snr, n_fwhm)
+% Set up parallelization, shuffle rng for each worker
+% parallel_pool(30, [], 'rng_shuffle')
 
-% Set up rng shuffle in workers
-% parallel_pool(22, [], 'rng_shuffle')
 
+% For each repetition...
 for i_rep = 1:p.sim.n_reps
 % parfor i_rep = 1:p.sim.n_reps
 
+    % Generate data
     [x, Y, E] = fss_sim_generate_data(p.sim.n_vox, total_trials);
     
+    % For each SNR level...
     for i_snr = 1:n_snr
 
+        % For each FWHM value...
         for i_fwhm = 1:n_fwhm
 
+            % Display progress
             fprintf('REP: %d/%d - SNR: %d/%d - FWHM: %d/%d - TOTAL: %d/%d \n', i_rep, p.sim.n_reps, i_snr, n_snr, i_fwhm, n_fwhm, (((i_rep-1)*n_snr+i_snr)-1)*n_fwhm+i_fwhm, n_fwhm*n_snr*p.sim.n_reps)
 
             % Scale data according to SNR and add noise
@@ -51,6 +62,7 @@ for i_rep = 1:p.sim.n_reps
             % Go back to original 2D array
             for i = 1:p.sim.n_run, Yy(p.sim.n_trial*(i-1)+1:p.sim.n_trial*i,:) = Yr(:,:,i); end
             
+            % Run pSVR
             xr = fss_sim_pSVR(x, Yy, p.sim.n_run);
                        
             % Quantify precision
@@ -60,12 +72,14 @@ for i_rep = 1:p.sim.n_reps
     end
 end
 
-filename = fullfile(base_dir, 'Results', 'simulations', ['fss_simulation_' datestr(now,'yymmddHHMMSS') '.mat']);
+% Save simulation results
+path = fullfile(base_dir, 'Results', 'simulations');
+if ~exist(path,'dir'); mkdir(path); end
+filename = fullfile(path, ['fss_simulation_' datestr(now,'yymmddHHMMSS') '.mat']);
 save(filename, 'bfca', 'p', '-v7.3')
 
 
 %% Plotting
-
 
 %%% Prepare data for plotting %%%
 
