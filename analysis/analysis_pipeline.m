@@ -29,7 +29,7 @@
 %%% Add analysis scripts and required toolboxes to the search path %%%
 
 % Analysis scripts
-addpath(genpath('/.../VisualImagery_paper/analysis/'));
+addpath(genpath('/.../VisualImagery_paper/code/analysis/'));
 
 % Toolboxes
 % 1. SPM12
@@ -52,7 +52,7 @@ rng('shuffle')
 
 % Basic paramters
 p.OVERWRITE             = 0;                                                % Do you want to overwrite already existing result files? Really???
-p.base_dir              = '/...';                                         % Base directory of the project, where all the stuff is stored. Should have a 'Dicom' folder in it.    
+p.base_dir              = '/VisualImagery_paper';                                         % Base directory of the project, where all the stuff is stored.
 
 % Number of sessions/runs-per-session/trials-per-run of the experiment
 p.n_session             = 2;                                                % Number of fMRI scanning sessions
@@ -92,7 +92,7 @@ p.psvr.n_perm           = 1000;                                             % Nu
 
 
 %%% Create folder strcutures, prepare data
-setup_analysis(p)
+setup_analysis(p);
 
 %%% Analyse data of the VVIQ questionnaire used for recruiting %%%
 analyse_questionnaire(p);
