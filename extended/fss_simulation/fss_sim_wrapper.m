@@ -3,7 +3,13 @@
 
 addpath('/.../VisualImagery_paper/extended/fss_simulation/');
 addpath('/.../VisualImagery_paper/analysis/general_purpose/');
+
+% 1. The Decoding Toolbox (TDT), version 3.999E or higher
+% https://sites.google.com/site/tdtdecodingtoolbox/
 addpath('/.../tdt_3.999F');
+% 2. RDK_vMMM toolbox for estimation of von Mises mixture models
+% https://github.com/JoramSoch/RDK_vMMM
+addpath('/.../RDK_vMMM');
 
 %%% Create structure with key parameters %%%
 

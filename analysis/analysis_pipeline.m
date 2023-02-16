@@ -1,11 +1,13 @@
 
 % Hi there!
 %
-% This is the complete pipeline to recreate the analysis and plots in ADD
-% PAPER TITLE AND AUTHORS. In theory (provided you have the data), you can
-% just hit run and everything will be done for you. In practice, this will
-% probably take a year or so. So computing clusters and parallelisation are
-% key (look for the out-commented 'parfor' and 'parallel_pool' lines).
+% This is the complete pipeline to recreate the analysis and plots in
+% "Working memory and imagery in early visual cortex" by Weber,
+% Christophel, Görgen, Soch and Haynes. In theory (provided you have the
+% data), you can just hit run and everything will be done for you. In
+% practice, this will probably take a year or so. So computing clusters and
+% parallelisation are key (look for the out-commented 'parfor' and
+% 'parallel_pool' lines).
 %
 % In this file, a bunch of analysis parameters are specified and stored in
 % a structure 'p' (for 'parameters'), which is passed to all other
@@ -14,6 +16,11 @@
 % fairly thoroughly, so I hope everything becomes clear with minimal (or at
 % least medium) effort. In case it doesn't, or you have questions, feel
 % free to email me at sweber@bccn-berlin.de.
+%
+% There are a few external tools and toolboxes that are required to run the
+% analysis. These are listed below, including their respective download
+% links. Make sure that you all resources are available on your system and
+% added to the Matlab search path.
 %
 % Cheers!
 %
@@ -26,10 +33,14 @@ addpath(genpath('/.../VisualImagery_paper/analysis/'));
 
 % Toolboxes
 % 1. SPM12
+% https://www.fil.ion.ucl.ac.uk/spm/software/download/
 addpath('/.../spm12/');
 % 2. The Decoding Toolbox (TDT), version 3.999E or higher
 % https://sites.google.com/site/tdtdecodingtoolbox/
 addpath('/.../tdt_3.999F');
+% 3. RDK_vMMM toolbox for estimation of von Mises mixture models
+% https://github.com/JoramSoch/RDK_vMMM
+addpath('/.../RDK_vMMM');
 
 
 %%% Shuffle randomization seed for permutation analysis %%%
@@ -56,7 +67,7 @@ p.subjects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, ...
 % fMRI image aquisition details
 p.img.n_slice           = 72;                                               % Number of slices in one fMRI image
 p.img.tr                = 0.8;                                              % Length of TR in seconds
-p.img.dim               = [104 104 72];                                     % Image dimensions
+p.img.dim               = [104 104 72];                                     % fMRI image dimensions
 % String-sample that defines the relevant fMRI images
 p.img.filter            = 'task-vwm';                                       % String of a defining peice of the fMRI image filenames, so that they can be identified be loading scripts etc.
 

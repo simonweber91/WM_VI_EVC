@@ -39,7 +39,7 @@ end
 high = vviq_score > median(vviq_score);
 low = vviq_score < median(vviq_score);
 
-% Get scores for subjects ini p
+% Get scores for subjects in p
 id_ind = find(ismember(mri_ID, p.subjects));
 vviq_score = vviq_score(id_ind);
 high = high(id_ind);

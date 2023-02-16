@@ -2,7 +2,11 @@
 %                       Initial setup
 %----------------------------------------------------------------------
 
-addpath('/.../experiment_ptb')
+addpath('/.../VisualImagery_paper/experiment_ptb')
+
+% This experiment is implemented via Psychtoolbox-3. Instructions on how to
+% donwload, install and set up Psychtoolbox for your operating system can
+% be found here: http://psychtoolbox.org/download
 addpath('/.../ptb_location')
 
 commandwindow
