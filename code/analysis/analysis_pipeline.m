@@ -3,11 +3,13 @@
 %
 % This is the complete pipeline to recreate the analysis and plots in
 % "Working memory and imagery in early visual cortex" by Weber,
-% Christophel, Görgen, Soch and Haynes. In theory (provided you have the
-% data), you can just hit run and everything will be done for you. In
-% practice, this will probably take a year or so. So computing clusters and
-% parallelisation are key (look for the out-commented 'parfor' and
-% 'parallel_pool' lines).
+% Christophel, Görgen, Soch and Haynes. To create the figures from the
+% paper, just complete a few file paths below (look for '...') and then hit
+% run (ignore the warning messages). If you have the original data (which
+% can be made available upon reasonable request), you can also recreate the
+% entire analysis. This might take very (very!) long, so computing clusters
+% and parallelisation are key (look for the out-commented 'parfor' and
+% 'parallel_pool' lines in the various functions).
 %
 % In this file, a bunch of analysis parameters are specified and stored in
 % a structure 'p' (for 'parameters'), which is passed to all other
@@ -24,7 +26,8 @@
 %
 % Cheers!
 %
-% Simon Weber, sweber@bccn-berlin.de, 2021
+% Simon Weber, sweber@bccn-berlin.de, 2023
+
 
 %%% Add analysis scripts and required toolboxes to the search path %%%
 
