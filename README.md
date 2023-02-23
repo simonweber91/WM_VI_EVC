@@ -12,6 +12,6 @@ Cheers!
 
 Simon Weber, sweber@bccn-berlin.de, 2023
 
-Preprint:  https://biorxiv.org/cgi/content/short/2023.02.13.528298v1
 
+Preprint:  https://biorxiv.org/cgi/content/short/2023.02.13.528298v1
 Preregistration: https://osf.io/34y9z
