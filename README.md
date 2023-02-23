@@ -6,7 +6,7 @@ This is the complete pipeline to recreate the analysis and plots in our paper "W
 
 All (well, most) functions in this repository are commented fairly thoroughly, so I hope everything becomes clear with minimal (or at least medium) effort. In case it doesn't, or you have questions, feel free to email me at sweber@bccn-berlin.de.
 
-There are a few external tools and toolboxes that are required to run the analysis. These are listed in 'WM_VI_EVC/code/analysis/analysis_pipeline.m', including their respective download links. Make sure that you all resources are available on your system and added to the Matlab search path.
+There are a few external tools and toolboxes that are required to run the analysis. These are listed in 'WM_VI_EVC/code/analysis/analysis_pipeline.m', including their respective download links. Make sure that all resources are available on your system and added to the Matlab search path.
 
 Cheers!
 
