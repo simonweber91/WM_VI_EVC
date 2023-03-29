@@ -49,7 +49,6 @@ end
 %%% Shuffle random number generator on each worker %%%
 if rng_shuffle
     fprintf('Initialize randomization seed for each worker. \n');
-    fprintf('CAREFUL: sets local rng to ''shuffle''. \n');
 
     % Set local rng to shuffle
     old_rng = rng;
@@ -67,6 +66,6 @@ if rng_shuffle
         rng(rng_seed);
     end
 
-    % revert rng settings
+    % Revert rng settings
     rng(old_rng);
 end
