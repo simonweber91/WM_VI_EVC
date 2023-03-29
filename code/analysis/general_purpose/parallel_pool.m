@@ -10,8 +10,7 @@ function parallel_pool(n_workers, restart, rng_shuffle)
 %   - n_workers: Number of workers that will be created.
 %   - restart: Set to 'restart' to re-initialize the pool if it is already running.
 %   - rng_shuffle: Shuffles the random number generator for each worker
-%       individually, helpful for e.g. simulations. CAREFUL: sets local rng
-%       to 'shuffle'.
+%       individually, helpful for e.g. simulations.
 %
 % Simon Weber, sweber@bccn-berlin.de, 2022
 
@@ -53,6 +52,7 @@ if rng_shuffle
     fprintf('CAREFUL: sets local rng to ''shuffle''. \n');
 
     % Set local rng to shuffle
+    old_rng = rng;
     rng('shuffle');
 
     % Get 3 lists of 1000 random integers btw. 1 and 1625 each.
@@ -66,4 +66,7 @@ if rng_shuffle
         rng_seed = s1(randi(1000,1)) * s2(randi(1000,1)) * s3(randi(1000,1));
         rng(rng_seed);
     end
+
+    % revert rng settings
+    rng(old_rng);
 end
