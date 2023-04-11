@@ -35,6 +35,9 @@ ci_lower = [plt(3).XData; plt(3).YData];
 ci_upper = [plt(4).XData; plt(4).YData];
 close;
 
+% Run t-test for aphantasia
+[h_aph, p_aph, ci_aph, stats_aph] = ttest(bfca(vviq<=32));
+
 %%% Plot %%%
 
 % Colors: orange, blue, grey
@@ -52,6 +55,10 @@ ci_a = fill([ci_lower(1,:) fliplr(ci_upper(1,:))], [ci_lower(2,:) fliplr(ci_uppe
 
 % Plot chance level
 yline(0, '--' , 'Color', [0.5 0.5 0.5]);
+
+% Plot aphantasia
+aph = fill([10, 32, 32, 10], [-5, -5, -1, -1], 'k', 'FaceAlpha', 0.15, 'LineStyle', 'none');
+text(11, -3, sprintf('aphantasia,\nt(%i) = %1.3f, p = %1.4f', stats_aph.df, round(stats_aph.tstat,3), round(p_aph,4)), 'FontSize', 8)
 
 %%% Format plot, add details %%%
 

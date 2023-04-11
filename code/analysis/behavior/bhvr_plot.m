@@ -69,7 +69,7 @@ ax = gca;
 ax.XLim = [-90 90];
 ax.XTick = [-90 -45 0 45 90];
 ax.XTickLabel = {'-90' '-45' '0' '45' '90'};
-ax.XLabel.String = 'Response error (°)';
+ax.XLabel.String = 'Response error [°]';
 ax.YLim = [0 2000];
 ax.YTick = [0 500 1000 1500 2000];
 ax.YTickLabel = {'0' '0.25' '0.5' '0.75' '1'};
@@ -90,13 +90,19 @@ f2 = figure; hold on;
 colors = {[255 153 85]./255, [85 153 255]./255, [179 179 179]./255};
 
 % Get relevant variables
-bias_av = mean(vMMM.m_est(:,1)); bias_av = rad2deg(bias_av)./2;
-bias_ci = get_ci95(vMMM.m_est(:,1)); bias_ci = rad2deg(bias_ci(2))./2;
+mu = vMMM.m_est(:,1);
+bias_av = mean(mu); bias_av = rad2deg(bias_av)./2;
+bias_ci = get_ci95(mu); bias_ci = rad2deg(bias_ci(2))./2;
+
+% Run t-test
+[h_mu, p_mu, ci_mu, stats_mu] = ttest(mu);
 
 % Plot
 b = barh(0, bias_av, 'linestyle', 'none', 'FaceColor', colors{3});
 er = errorbar(bias_av, 0, bias_ci, 'horizontal', 'Color', 'k', 'linestyle', 'none');
 b.BarWidth = 1;
+
+text(-1.8, 0.65, sprintf('t(%i) = %1.3f, p = %1.4f', stats_mu.df, round(stats_mu.tstat,3), round(p_mu,4)), 'FontSize', 12)
 
 %%% Format plot, add details %%%
 
@@ -104,7 +110,7 @@ ax = gca;
 ax.XLim = [-2 1];
 ax.XTick = [-3 -2 -1 0 1];
 ax.XTickLabel = {'-3' '-2' '-1' '0' '1'};
-ax.XLabel.String = 'Response bias µ (°)';
+ax.XLabel.String = 'Response bias µ [°]';
 ax.YLim = [-0.75 0.75];
 ax.YAxis.Visible = 'off';
 axis square
@@ -125,11 +131,16 @@ bar_dat = [mean(kappa(low)) mean(kappa(high))];
 bar_err = [get_ci95(kappa(low)) get_ci95(kappa(high))];
 bar_err = bar_err(2,:);
 
+% Run t-test
+[h_k, p_k, ci_k, stats_k] = ttest2(kappa(low), kappa(high));
+
 % Plot
 b = bar(bar_dat,'LineStyle','none');
 b.FaceColor = 'flat';
 b.CData = [colors{1}; colors{2}];
 errorbar(bar_dat, bar_err, 'Color', [0.3 0.3 0.3], 'linestyle', 'none');
+
+text(1, 9, sprintf('t(%i) = %1.3f, p = %1.3f', stats_k.df, round(stats_k.tstat,3), round(p_k,3)), 'FontSize', 12)
 
 %%% Format plot, add details %%%
 
@@ -137,7 +148,7 @@ ax = gca;
 ax.XLim = [0.25 2.75];
 ax.YLim = [0 10];
 ax.XLabel.String = 'Visual Imagery Vividness';
-ax.YLabel.String = 'Behavioral precision (𝜅)';
+ax.YLabel.String = 'Behavioral precision [𝜅]';
 ax.XTick = [1 2];
 ax.XTickLabel = {'weak','strong'};
 ax.XLabel.FontSize = 13;
@@ -158,20 +169,27 @@ r1 = vMMM.r_est(:,1);
 r2 = vMMM.r_est(:,2);
 r3 = vMMM.r_est(:,3);
 k2 = vMMM.k_est(:,2);
-m = rad2deg(vMMM.m_est(:,1))./2;
+mu = rad2deg(vMMM.m_est(:,1))./2;
 
 % Prepare bar data
 bar_dat = [mean(r1(low)) mean(r1(high));
     mean(r2(low)) mean(r2(high));
     mean(r3(low)) mean(r3(high));
     mean(k2(low)) mean(k2(high));
-    mean(m(low)) mean(m(high))];
+    mean(mu(low)) mean(mu(high))];
 bar_err = [get_ci95(kappa(low)) get_ci95(kappa(high));
     get_ci95(r2(low)) get_ci95(r2(high));
     get_ci95(r3(low)) get_ci95(r3(high));
     get_ci95(k2(low)) get_ci95(k2(high));
-    get_ci95(m(low)) get_ci95(m(high))];
+    get_ci95(mu(low)) get_ci95(mu(high))];
 bar_err = bar_err(2:2:size(bar_err,1),:);
+
+% Run t-tests
+[h_r1, p_r1, ci_r1, stats_r1] = ttest2(r1(low), r1(high));
+[h_r2, p_r2, ci_r2, stats_r2] = ttest2(r2(low), r2(high));
+[h_r3, p_r3, ci_r3, stats_r3] = ttest2(r3(low), r3(high));
+[h_k2, p_k2, ci_k2, stats_k2] = ttest2(k2(low), k2(high));
+[h_mu, p_mu, ci_mu, stats_mu] = ttest2(mu(low), mu(high));
 
 % Plot
 b = bar(bar_dat, 'grouped', 'BarWidth', 0.95, 'EdgeColor', 'none');
@@ -186,6 +204,12 @@ for i = 1:nbars
     err_loc(i,:) = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
     errorbar(err_loc(i,:), bar_dat(:,i), bar_err(:,i), 'Color', [0.3 0.3 0.3], 'linestyle', 'none');
 end
+
+text(0.7, -2.5, sprintf('t(%i) = %1.3f,\np = %1.3f', stats_r1.df, round(stats_r1.tstat,3), round(p_r1,3)), 'FontSize', 8)
+text(1.7, -2.5, sprintf('t(%i) = %1.3f,\np = %1.3f', stats_r2.df, round(stats_r2.tstat,3), round(p_r2,3)), 'FontSize', 8)
+text(2.7, -2.5, sprintf('t(%i) = %1.3f,\np = %1.3f', stats_r3.df, round(stats_r3.tstat,3), round(p_r3,3)), 'FontSize', 8)
+text(3.7, -2.5, sprintf('t(%i) = %1.3f,\np = %1.3f', stats_k2.df, round(stats_k2.tstat,3), round(p_k2,3)), 'FontSize', 8)
+text(4.7, -2.5, sprintf('t(%i) = %1.3f,\np = %1.3f', stats_mu.df, round(stats_mu.tstat,3), round(p_mu,3)), 'FontSize', 8)
 
 %%% Format plot, add details %%%
 
@@ -237,7 +261,7 @@ ax = gca;
 ax.XLim = [-90 90];
 ax.XTick = [-90 -45 0 45 90];
 ax.XTickLabel = {'-90' '-45' '0' '45' '90'};
-ax.XLabel.String = 'Response error (°)';
+ax.XLabel.String = 'Response error [°]';
 ax.YLim = [0 1];
 ax.YTick = [0 0.25 0.5 0.75 1];
 ax.YTickLabel = {'0' '0.25' '0.5' '0.75' '1'};

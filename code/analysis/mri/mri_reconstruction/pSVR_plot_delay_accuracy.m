@@ -23,16 +23,19 @@ if isempty(high) || isempty(low)
 end
 
 % Prepare data for group weak
-bfca_low = bfca_cv(low, delay);
-av_low = mean(mean(bfca_low,2));
-se_low = get_ci95(mean(bfca_low,2)); se_low = se_low(2,:);
+bfca_low = mean(bfca_cv(low, delay),2);
+av_low = mean(bfca_low);
+se_low = get_ci95(bfca_low); se_low = se_low(2,:);
 % Prepare data for group strong
-bfca_high = bfca_cv(high, delay);
+bfca_high = mean(bfca_cv(high, delay),2);
 av_high = mean(mean(bfca_high,2));
 se_high = get_ci95(mean(bfca_high,2)); se_high = se_high(2,:);
 % Prepare data for bar-graph
 bar_dat = [av_low, av_high];
 bar_err = [se_low, se_high];
+
+% Run t-test
+[h_val, p_val, ci, stats] = ttest2(bfca_low, bfca_high, 'Tail', 'left');
 
 %%% Plot %%%
 
@@ -46,6 +49,8 @@ b = bar(bar_dat,'LineStyle','none');
 b.FaceColor = 'flat';
 b.CData = [colors{1}; colors{2}];
 errorbar(bar_dat, bar_err, 'Color', 'k', 'linestyle', 'none');
+
+text(1, 20, sprintf('t(%i) = %1.3f, p = %1.3f', stats.df, round(stats.tstat,3), round(p_val,3)), 'FontSize', 12)
 
 %%% Format plot, add details %%%
 
