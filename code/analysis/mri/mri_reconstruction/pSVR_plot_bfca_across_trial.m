@@ -56,7 +56,7 @@ text(12.8, -2, '|response', 'FontWeight', 'bold'); % 16 in TR
 ax = gca;
 ax.YLim = [-5 40];
 ax.XLim = [0 x(end)];
-ax.YLabel.String = 'Accuracy [% BFCA]';
+ax.YLabel.String = 'Accuracy [% BFCA above chance]';
 ax.XLabel.String = 'Time [s]';
 ax.XLabel.FontSize = 13;
 ax.YLabel.FontSize = 13;

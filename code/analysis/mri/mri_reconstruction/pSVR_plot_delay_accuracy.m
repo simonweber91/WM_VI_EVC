@@ -22,17 +22,17 @@ if isempty(high) || isempty(low)
     return;
 end
 
-% Prepare data for group high
+% Prepare data for group weak
+bfca_low = bfca_cv(low, delay);
+av_low = mean(mean(bfca_low,2));
+se_low = get_ci95(mean(bfca_low,2)); se_low = se_low(2,:);
+% Prepare data for group strong
 bfca_high = bfca_cv(high, delay);
 av_high = mean(mean(bfca_high,2));
 se_high = get_ci95(mean(bfca_high,2)); se_high = se_high(2,:);
-% Prepare data for group low
-bfca_low = bfca_cv(low,delay);
-av_low = mean(mean(bfca_low,2));
-se_low = get_ci95(mean(bfca_low,2)); se_low = se_low(2,:);
 % Prepare data for bar-graph
-bar_dat = [av_high, av_low];
-bar_err = [se_high se_low];
+bar_dat = [av_low, av_high];
+bar_err = [se_low, se_high];
 
 %%% Plot %%%
 
@@ -51,9 +51,9 @@ errorbar(bar_dat, bar_err, 'Color', 'k', 'linestyle', 'none');
 
 ax = gca;
 ax.XLabel.String = 'Visual Imagery Vividness';
-ax.YLabel.String = 'Delay-period accuracy [% BFCA]';
+ax.YLabel.String = 'Delay-period accuracy [% BFCA above chance]';
 ax.XTick = [1 2];
-ax.XTickLabel = {'strong','weak'};
+ax.XTickLabel = {'weak','strong'};
 ax.XLim = [0.25 2.75];
 ax.YLim = [0 22];
 ax.Box = 'off';
