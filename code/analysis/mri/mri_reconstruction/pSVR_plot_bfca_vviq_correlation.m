@@ -16,12 +16,11 @@ load(fullfile(stats_file.folder, stats_file.name), 'tmass_stats')
 bfca_cv = tmass_stats.empirical.data;
 
 % Load VVIQ scores
-[vviq_score, high, low] = vviq_scores(p);
-if isempty(vviq_score)
+[vviq, high, low] = vviq_scores(p);
+if isempty(vviq)
     warning('No vviq data, cannot plot.');
     return;
 end
-vviq = vviq_score';
 
 bfca = mean(bfca_cv(:,delay),2);
 

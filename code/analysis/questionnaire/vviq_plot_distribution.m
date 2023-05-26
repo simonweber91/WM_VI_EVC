@@ -1,11 +1,11 @@
 function vviq_distribution_plot = vviq_plot_distribution(p)
 
-vviq_file = dir(fullfile(p.dirs.data, 'analysis', 'all', 'results', 'vviq.mat'));
+% Load VVIQ data
+vviq_file = dir(fullfile(p.dirs.data, 'questionnaire', 'vviq.mat'));
 if isempty(vviq_file)
     warning('vviq.mat not found.');
     return;
 end
-
 load(fullfile(vviq_file.folder, vviq_file.name), 'vviq')
 
 % Get histogram counts

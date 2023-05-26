@@ -133,11 +133,17 @@ bar_err = bar_err(2,:);
 
 % Run t-test
 [h_k, p_k, ci_k, stats_k] = ttest2(kappa(low), kappa(high));
+% [p_k, h_k, stats_k] = ranksum(kappa(low), kappa(high));
 
 % Plot
 b = bar(bar_dat,'LineStyle','none');
 b.FaceColor = 'flat';
 b.CData = [colors{1}; colors{2}];
+
+jitter = ones(numel(kappa(low)),1)+(randn(numel(kappa(low)),1)./75);
+scatter(jitter, kappa(low), 20, [0.45 0.45 0.45], 'filled')
+scatter(jitter+1, kappa(high), 20, [0.45 0.45 0.45], 'filled')
+
 errorbar(bar_dat, bar_err, 'Color', [0.3 0.3 0.3], 'linestyle', 'none');
 
 text(1, 9, sprintf('t(%i) = %1.3f, p = %1.3f', stats_k.df, round(stats_k.tstat,3), round(p_k,3)), 'FontSize', 12)
@@ -146,14 +152,14 @@ text(1, 9, sprintf('t(%i) = %1.3f, p = %1.3f', stats_k.df, round(stats_k.tstat,3
 
 ax = gca;
 ax.XLim = [0.25 2.75];
-ax.YLim = [0 10];
+% ax.YLim = [0 10];
 ax.XLabel.String = 'Visual Imagery Vividness';
 ax.YLabel.String = 'Behavioral precision [𝜅]';
 ax.XTick = [1 2];
 ax.XTickLabel = {'weak','strong'};
 ax.XLabel.FontSize = 13;
 ax.YLabel.FontSize = 13;
-ax.YTick = [0:2:10];
+% ax.YTick = [0:2:10];
 
 
 %% 4. Other estimated parameters for each group
@@ -177,7 +183,7 @@ bar_dat = [mean(r1(low)) mean(r1(high));
     mean(r3(low)) mean(r3(high));
     mean(k2(low)) mean(k2(high));
     mean(mu(low)) mean(mu(high))];
-bar_err = [get_ci95(kappa(low)) get_ci95(kappa(high));
+bar_err = [get_ci95(r1(low)) get_ci95(r1(high));
     get_ci95(r2(low)) get_ci95(r2(high));
     get_ci95(r3(low)) get_ci95(r3(high));
     get_ci95(k2(low)) get_ci95(k2(high));
@@ -200,6 +206,7 @@ b(2).FaceColor = colors{2};
 [ngroups, nbars] = size(bar_dat);
 groupwidth = min(0.8, nbars/(nbars + 1.5));
 err_loc = zeros(nbars, ngroups);
+
 for i = 1:nbars
     err_loc(i,:) = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
     errorbar(err_loc(i,:), bar_dat(:,i), bar_err(:,i), 'Color', [0.3 0.3 0.3], 'linestyle', 'none');

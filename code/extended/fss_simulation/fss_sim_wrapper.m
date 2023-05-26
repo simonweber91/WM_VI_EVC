@@ -15,7 +15,7 @@ addpath('/.../RDK_vMMM');
 
 p.base_dir = '/...';   
 
-p.sim.n_reps = 250;
+p.sim.n_reps = 1000;
 p.sim.fwhm = [0:10:360];
 p.sim.snr = [0:0.1:1];
 
@@ -79,7 +79,7 @@ for i_rep = 1:p.sim.n_reps
 end
 
 % Save simulation results
-path = fullfile(base_dir, 'Results', 'simulations');
+path = fullfile(data_dir, 'data', 'simulations');
 if ~exist(path,'dir'); mkdir(path); end
 filename = fullfile(path, ['fss_simulation_' datestr(now,'yymmddHHMMSS') '.mat']);
 save(filename, 'bfca', 'p', '-v7.3')
@@ -95,34 +95,41 @@ bfca = bfca.*100-50;
 % Get BFCA gain compared to no smoothing (FWHM = 0)
 bfca_gain = bfca-bfca(1,:,:);
 
-% a) Get noise condition
+% Get noise condition
 noise = permute(bfca(:,1,:),[3 1 2]);
-noise_av = mean(noise);
-noise_ci = get_ci95(noise);
 
-% b) Get signal condition, i.e. mean across all SNRs except 0
-signal = squeeze(mean(bfca(:,2:end,:),2))';
-signal_av = mean(signal);
-signal_ci = get_ci95(noise);
-
-% c) Get BFCA gain for noise
-noise_gain = permute(bfca_gain(:,1,:),[3 1 2]);
-noise_gain_av = mean(noise_gain);
-noise_gain_ci = get_ci95(noise_gain);
-
-% d) Get BFCA gain across signal conditions
-signal_gain = squeeze(mean(bfca_gain(:,2:end,:),2))';
-signal_gain_av = mean(signal_gain);
-signal_gain_ci = get_ci95(noise_gain);
+colors = {[0 0.4470 0.7410], [0.8500 0.3250 0.0980], [0.9290 0.6940 0.1250]};
 
 
-%%% 1. BFCA across reps for all parameter combinations %%%
+%%% 1. Plot noise across FWHM %%%
 
+figure; hold on;
+boxplot(noise, 'PlotStyle', 'compact', 'Colors', colors{1}, 'Symbol', '');
+
+ax = gca;
+ax.YLim = [-20 20];
+ax.XTick = [0:5:35];
+ax.XTickLabel = {'0','50','100','150','200','250','300','350'};
+
+xlabel('FWHM of smoothing kernel (°)'); ylabel('BFCA above chance (%)')
+
+%%% 2. BFCA Surface Plot %%%
+
+% Plot mean BFCA across reps for all parameter combinations
 figure;
+% s1 = imagesc(fwhm, snr, mean(bfca,3)');
+imagesc(mean(bfca,3)');
+[h_bounds, p_bounds] = ttest(bfca,0,'Dim',3,'Tail','right');
+h_bounds(isnan(h_bounds)) = 0; p_bounds(isnan(p_bounds)) = 1;
+% runBoundary(p_bounds<0.05/numel(p_bounds(2:end,:)), 'k', 2);
 
-s1 = imagesc(p.sim.fwhm, p.sim.snr, mean(bfca,3)');
 ax1 = gca;
 ax1.YDir = 'normal';
+
+ax1.XTick = [0:5:35];
+ax1.XTickLabel = {'0','50','100','150','200','250','300','350'};
+
+ax1.YTickLabel = {'0','0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1'};
 
 xlabel('FWHM of smoothing kernel (°)'); ylabel('SNR');
 
@@ -131,31 +138,24 @@ c.Label.String = 'BFCA above chance (%)';
 c.Label.FontSize = 12;
 
 
-%%% 2. Plot noise vs. signal as a function of FWHM %%%
-
-figure; hold on;
-
-fill([p.sim.fwhm, fliplr(p.sim.fwhm)], [noise_av+noise_ci(1,:), fliplr(noise_av+noise_ci(2,:))], 'k', 'FaceAlpha', 0.15, 'LineStyle', 'none');
-p1 = plot(p.sim.fwhm, noise_av, 'k', 'LineWidth', 2);
-
-fill([p.sim.fwhm, fliplr(p.sim.fwhm)], [signal_av+signal_ci(1,:), fliplr(signal_av+signal_ci(2,:))], 'g', 'FaceAlpha', 0.15, 'LineStyle', 'none');
-p2 = plot(p.sim.fwhm, signal_av, 'g', 'LineWidth', 2);
-
-yline(0, '--' , 'Color', [0.5 0.5 0.5]);
-
-xlabel('FWHM of smoothing kernel (°)'); ylabel('BFCA above chance (%)')
-xlim([0 360])
-
-legend([p1,p2], {'noise', 'signal present'}, 'box', 'off')
-
-
 %%% 3. BFCA gained by smoothing Surface Plot %%%
 
 figure;
+% s2 = imagesc(fwhm, snr, mean(BFCA_gain,3)');
+imagesc(mean(bfca_gain,3)');
+[h_bounds, p_bounds] = ttest(bfca_gain,0,'Dim',3,'Tail','right');
+h_bounds(isnan(h_bounds)) = 0; p_bounds(isnan(p_bounds)) = 1;
+% draw significance bounds of bonferroni corrected p-values (ignore fwhm=0
+% condition for correction, as we are not doing a test for that)
+b = runBoundary(p_bounds<0.05/numel(p_bounds(2:end,:)), 'k', 4);
 
-s2 = imagesc(p.sim.fwhm, p.sim.snr, mean(bfca_gain,3)');
 ax2 = gca;
 ax2.YDir = 'normal';
+
+ax2.XTick = [0:5:35];
+ax2.XTickLabel = {'0','50','100','150','200','250','300','350'};
+
+ax2.YTickLabel = {'0','0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1'};
 
 xlabel('FWHM of smoothing kernel (°)'); ylabel('SNR');
 
@@ -163,22 +163,5 @@ c = colorbar;
 c.Label.String = 'BFCA gain (%)';
 c.Label.FontSize = 12;
 
-
-%%% 4. Plot noise- vs. signal-gain (compared to no smoothing, FWHM = 0) as a function of FWHM %%
-
-figure; hold on;
-
-fill([p.sim.fwhm, fliplr(p.sim.fwhm)], [noise_gain_av+noise_gain_ci(1,:), fliplr(noise_gain_av+noise_gain_ci(2,:))], 'k', 'FaceAlpha', 0.15, 'LineStyle', 'none');
-p1 = plot(p.sim.fwhm, noise_gain_av, 'k', 'LineWidth', 2);
-
-fill([p.sim.fwhm, fliplr(p.sim.fwhm)], [signal_gain_av+signal_gain_ci(1,:), fliplr(signal_gain_av+signal_gain_ci(2,:))], 'g', 'FaceAlpha', 0.15, 'LineStyle', 'none');
-p2 = plot(p.sim.fwhm, signal_gain_av, 'g', 'LineWidth', 2);
-
-yline(0, '--' , 'Color', [0.5 0.5 0.5]);
-
-xlabel('FWHM of smoothing kernel (°)'); ylabel('BFCA gain (%)')
-xlim([0 360])
-
-legend([p1,p2], {'noise', 'signal present'}, 'box', 'off')
-
+l = legend(b,{'p < 0.05, corrected'}, 'Location', 'NorthEast');
 

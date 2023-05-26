@@ -9,5 +9,11 @@ function analyse_questionnaire(p)
 % Load VVIQ data used for recruitment
 vviq_load(p);
 
+% Load post-scan questionnaire data
+post_scan_load(p);
+
 % Plot the distribution of the questionnaire VVIQ scores
 vviq_plot_distribution(p);
+
+% Plot results of the post-scan questionnaires
+plot_post_scan_questionnaires(p);

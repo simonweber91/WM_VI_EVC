@@ -35,7 +35,8 @@ bar_dat = [av_low, av_high];
 bar_err = [se_low, se_high];
 
 % Run t-test
-[h_val, p_val, ci, stats] = ttest2(bfca_low, bfca_high, 'Tail', 'left');
+[h_val, p_val, ci, stats] = ttest2(bfca_low, bfca_high);
+% [p_val, h_val, stats] = ranksum(bfca_low, bfca_high);
 
 %%% Plot %%%
 
@@ -48,6 +49,11 @@ f = figure; hold on
 b = bar(bar_dat,'LineStyle','none');
 b.FaceColor = 'flat';
 b.CData = [colors{1}; colors{2}];
+
+jitter = ones(numel(bfca_low),1)+(randn(numel(bfca_low),1)./75);
+scatter(jitter, bfca_low, 20, [0.45 0.45 0.45], 'filled')
+scatter(jitter+1, bfca_high, 20, [0.45 0.45 0.45], 'filled')
+
 errorbar(bar_dat, bar_err, 'Color', 'k', 'linestyle', 'none');
 
 text(1, 20, sprintf('t(%i) = %1.3f, p = %1.3f', stats.df, round(stats.tstat,3), round(p_val,3)), 'FontSize', 12)
@@ -60,7 +66,7 @@ ax.YLabel.String = 'Delay-period accuracy [% BFCA above chance]';
 ax.XTick = [1 2];
 ax.XTickLabel = {'weak','strong'};
 ax.XLim = [0.25 2.75];
-ax.YLim = [0 22];
+% ax.YLim = [0 22];
 ax.Box = 'off';
 ax.XLabel.FontSize = 13;
 ax.YLabel.FontSize = 13;

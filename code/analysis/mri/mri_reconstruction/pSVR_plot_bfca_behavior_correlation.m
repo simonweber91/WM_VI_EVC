@@ -23,7 +23,6 @@ if isempty(vviq_score)
     warning('No vviq data, cannot plot.');
     return;
 end
-vviq = vviq_score';
 
 bfca = mean(bfca_cv(:,delay),2);
 

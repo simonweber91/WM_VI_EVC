@@ -62,5 +62,5 @@ ax.XLabel.FontSize = 13;
 ax.YLabel.FontSize = 13;
 
 % Legend
-ll = legend([plt(1).p, plt(4).p , plt(2).p, plt(3).p], {'target ± 95% CI', 'reported ± 95% CI', 'distractor ± 95% CI', 'probe ± 95% CI'}, 'Location', 'northeastoutside');
+ll = legend([plt(1).p, plt(2).p , plt(3).p, plt(4).p], {'target ± 95% CI', 'reported ± 95% CI', 'distractor ± 95% CI', 'probe ± 95% CI'}, 'Location', 'northeastoutside');
 ll.Box = 'off';

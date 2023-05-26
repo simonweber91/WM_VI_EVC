@@ -22,7 +22,7 @@ function [vviq_score, high, low] = vviq_scores(p)
 vviq_score = [];
 high = []; low = [];
 
-vviq_file = dir(fullfile(p.dirs.data, 'analysis', 'all', 'results', 'vviq.mat'));
+vviq_file = dir(fullfile(p.dirs.data, 'questionnaire', 'vviq.mat'));
 if isempty(vviq_file)
     warning('vviq.mat not found.');
     return;
@@ -41,7 +41,7 @@ invited_but_missing_data_ID = [64, 517];
 
 % Extract VVIQ scores
 for i = 1:numel(vviq_ID)
-    vviq_score(i) = vviq.SCORE(vviq.CASE==vviq_ID(i));
+    vviq_score(i,1) = vviq.SCORE(vviq.CASE==vviq_ID(i));
 end
 
 % Assign groups

@@ -43,7 +43,7 @@ addpath('/.../spm12/');
 addpath('/.../tdt_3.999F');
 % 3. RDK_vMMM toolbox for estimation of von Mises mixture models
 % https://github.com/JoramSoch/RDK_vMMM
-addpath('/.../RDK_vMMM');
+addpath('/.../RDK_vMMM/tools/vMMM');
 
 
 %%% Shuffle randomization seed for permutation analysis %%%
@@ -74,7 +74,7 @@ p.img.n_slice           = 72;                                               % Nu
 p.img.tr                = 0.8;                                              % Length of TR in seconds
 p.img.dim               = [104 104 72];                                     % fMRI image dimensions
 % String-sample that defines the relevant fMRI images
-p.img.filter            = 'task-vwm';                                       % String of a defining peice of the fMRI image filenames, so that they can be identified be loading scripts etc.
+p.img.filter            = 'task-vwm';                                       % String of a defining peice of the fMRI image filenames, so that they can be identified by loading scripts etc.
 
 % First-level analysis parameters
 p.lvl1.title            = 'trial_events';                                   % What the first-level analysis should be called
@@ -84,7 +84,7 @@ p.lvl1.constrast_weights = { [repmat([1 0 0 0 0 0 zeros(1,6)],1,p.n_session*p.n_
 
 % Reconstruction parameters
 p.psvr.event            = 'delay';                                          % Event from which to decode
-p.psvr.n_tr             = 30;                                               % Number of TRs to reconstruct from following the event onset
+p.psvr.n_tr             = 30;                                               % Number of TRs to reconstruct following the event onset
 p.psvr.all_labels       = {'target', 'report', 'distractor', 'probe'};      % All labels which should bepsvr.voxel decoded
 p.psvr.label            = '';                                               % Placeholder for current decoding label
 p.psvr.fwhm             = [0:20:180];                                       % FWHM of feature space smoothing kernel, can be an array of multiple values for grid-search
@@ -109,5 +109,7 @@ analyse_behavior(p);
 %%% labels from voxel data %%%
 analyse_mri(p);
 
-
+%%% Export delay-period reconstruction, behavioral, and VVIQ data for
+%%% external Bayesian analysis
+export_data(p);
 
