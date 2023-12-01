@@ -56,8 +56,8 @@ ci_a = fill([ci_lower(1,:) fliplr(ci_upper(1,:))], [ci_lower(2,:) fliplr(ci_uppe
 yline(0, '--' , 'Color', [0.5 0.5 0.5]);
 
 % Plot aphantasia
-aph = fill([10, 32, 32, 10], [-5, -5, -1, -1], 'k', 'FaceAlpha', 0.15, 'LineStyle', 'none');
-text(11, -3, sprintf('aphantasia,\nt(%i) = %1.3f, p = %1.4f', stats_aph.df, round(stats_aph.tstat,3), round(p_aph,4)), 'FontSize', 8)
+% aph = fill([10, 32, 32, 10], [-5, -5, -1, -1], 'k', 'FaceAlpha', 0.15, 'LineStyle', 'none');
+% text(11, -3, sprintf('aphantasia,\nt(%i) = %1.3f, p = %1.4f', stats_aph.df, round(stats_aph.tstat,3), round(p_aph,4)), 'FontSize', 8)
 
 %%% Format plot, add details %%%
 
@@ -65,7 +65,7 @@ ax = gca;
 ax.XLabel.String = 'Visual Imagery Vividness Score';
 ax.YLabel.String = 'Delay-period accuracy [% BFCA above chance]';
 ax.XLim = [10 80];
-ax.YLim = [-5 45];
+ax.YLim = [-10 45];
 ax.YTick = [-10 0 10 20 30 40];
 ax.XLabel.FontSize = 13;
 ax.YLabel.FontSize = 13;

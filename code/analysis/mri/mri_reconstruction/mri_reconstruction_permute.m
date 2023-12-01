@@ -7,11 +7,16 @@ function mri_reconstruction_permute(p)
 % optimal parameters for each subject are determined on the basis of all
 % other subjects (see pSVR_nested_cv.m). Next, these parameters are used in
 % a permutation analysis, where the entire analysis is repeated x times
-% (usually: x = 1000) wiht permuted labels. These permutation results are
+% (usually: x = 1000) with permuted labels. These permutation results are
 % then used to determine timepoints with significantly above chance
 % reconstruction accuracy using a permutation-based cluster t-mass
 % analysis. (see cluster_t_mass.m)
 
+% Skip if number of permutations is 0
+if p.psvr.n_perm == 0
+    warning('Number of permutations is 0, skip permutation analysis.');
+    return;
+end
 
 % Load results of grid-search pSVR analysis
 all_results = pSVR_load_results(p, 'grid');
@@ -89,10 +94,11 @@ for i_sub = 1:numel(p.subjects)
 
     % Save combined results file
     bfca = cat(1, bfca_cv(i_sub,:), results.bfca);
+    voxel = voxel_cv(:,i_sub); fwhm = fwhm_cv(:,i_sub);
     bfca_dir = fullfile(p.dirs.data, 'analysis', ['sub-' sub_str], 'results');
     if ~exist(bfca_dir, 'dir'), mkdir(bfca_dir); end
     bfca_file = fullfile(bfca_dir, ['bfca_' sub_p.psvr.label '_' sub_p.psvr.roi '.mat']);
-    save(bfca_file, 'bfca', '-v7.3');
+    save(bfca_file, 'bfca', 'voxel', 'fwhm', '-v7.3');
 
 end
 

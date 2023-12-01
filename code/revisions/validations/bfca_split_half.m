@@ -17,7 +17,7 @@ for i_sub = 1:numel(p.subjects)
 % parallel_pool(p.par.n_workers);
 
     % Get subject ID
-    sub_id = p.subjects(i_sub)
+    sub_id = p.subjects(i_sub);
 
     % Load predictions
     filename = get_filename(sub_id, p);

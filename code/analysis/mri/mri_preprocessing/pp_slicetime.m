@@ -45,7 +45,9 @@ elseif n_ses == 1
     % Check if output images already exist
     check_file = dir(fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'func', ['arsub*' filter '*']));
     list = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'func'),['^rsub.*' filter]);
-    files{end+1} = cellstr(list);
+    if ~isempty(list)
+        files{end+1} = cellstr(list);
+     end
 end
 
 % Check if input files are present

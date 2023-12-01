@@ -40,18 +40,18 @@ addpath(genpath('/.../WM_VI_EVC/code/analysis/'));
 addpath('/.../spm12/');
 % 2. The Decoding Toolbox (TDT), version 3.999E or higher
 % https://sites.google.com/site/tdtdecodingtoolbox/
-addpath('/.../tdt_3.999F');
+addpath(genpath('/.../tdt_3.999F'));
 % 3. RDK_vMMM toolbox for estimation of von Mises mixture models
 % https://github.com/JoramSoch/RDK_vMMM
-addpath('/.../RDK_vMMM/tools/vMMM');
+addpath(genpath('/.../RDK_vMMM/tools/vMMM'));
 
 
 %%% Shuffle randomization seed for permutation analysis %%%
 
 rng('shuffle')
 
-%%% Create structure with key analysis parameters %%%
 
+%%% Create structure with key analysis parameters %%%
 
 % Basic paramters
 p.OVERWRITE             = 0;                                                % Do you want to overwrite already existing result files? Really???
@@ -77,6 +77,7 @@ p.img.dim               = [104 104 72];                                     % fM
 p.img.filter            = 'task-vwm';                                       % String of a defining peice of the fMRI image filenames, so that they can be identified by loading scripts etc.
 
 % First-level analysis parameters
+p.lvl1.pp_filter        = 'r';                                              % SPM prefix, selecting the preprocessing stage of the functional images that should be entered into the lvl1 analysis
 p.lvl1.title            = 'trial_events';                                   % What the first-level analysis should be called
 p.lvl1.conditions       = {'target'; 'distractor'; 'cue'; 'delay'; 'probe'; 'report'};  % Which events to model
 p.lvl1.contrasts        = {'target'};                                       % Which events to contrast

@@ -65,7 +65,11 @@ for i_sub = 1:n_sub
     % Fill output variable with the subject specific values and indeces of
     % the optimal analysis run
     voxel_cv(1,i_sub) = max_row;
-    voxel_cv(2,i_sub) = p.psvr.voxel(max_row);
+    if isnumeric(p.psvr.voxel(max_row))
+        voxel_cv(2,i_sub) = p.psvr.voxel(max_row);
+    else
+        voxel_cv(2,i_sub) = NaN;
+    end
     fwhm_cv(1,i_sub) = max_col;
     fwhm_cv(2,i_sub) = p.psvr.fwhm(max_col);
     

@@ -39,6 +39,7 @@ if n_ses > 1
              list = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], ['ses-' ses_str], 'func'), ['^sub.*' filter '.*run-' run_str]);
              if ~isempty(list)
                 files{end+1} = cellstr(list);
+%                 files = cat(1,files,cellstr(list)); files = files';
              end
          end
     end

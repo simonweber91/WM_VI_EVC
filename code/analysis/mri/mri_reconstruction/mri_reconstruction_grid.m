@@ -13,7 +13,6 @@ function mri_reconstruction_grid(p)
 % accuracy using a permutation-based cluster t-mass analysis. (see
 % cluster_t_mass.m)
 
-
 % Run analysis
 for i_sub = 1:numel(p.subjects)
 % parallel_pool(p.par.n_workers);
@@ -41,7 +40,14 @@ for i_sub = 1:numel(p.subjects)
     %%% Run analysis
     % For each voxel count...
     for i_voxel = first_voxel:numel(p.psvr.voxel)
-        voxel_count = p.psvr.voxel(i_voxel);
+        % get correct number of voxels, if p.psvr.voxel = {'all'}, use all
+        % voxels from current ROI
+        if iscell(p.psvr.voxel) && numel(p.psvr.voxel) == 1 && strcmp(p.psvr.voxel{1},'all')
+            voxel_count = size(data,2);
+        else
+            voxel_count = p.psvr.voxel(i_voxel);
+        end
+
         % For each fwhm value...
         for i_fwhm = first_fwhm:numel(p.psvr.fwhm)
             fwhm = p.psvr.fwhm(i_fwhm);
@@ -52,8 +58,8 @@ for i_sub = 1:numel(p.subjects)
             sin_pred = cell(1, p.psvr.n_tr); cos_pred = cell(1, p.psvr.n_tr); ang_pred = cell(1, p.psvr.n_tr); bfca = zeros(1, p.psvr.n_tr);
 
             % For each TR...
-            for i_tr = 1:p.psvr.n_tr
-%             parfor i_tr = 1:p.psvr.n_tr
+%             for i_tr = 1:p.psvr.n_tr
+            parfor i_tr = 1:p.psvr.n_tr
 
                 fprintf('Analysing: subject %d/%d - voxel_count %d/%d - fwhm %d/%d - TR %d/%d ... \n', i_sub, numel(p.subjects), i_voxel, numel(p.psvr.voxel), i_fwhm, numel(p.psvr.fwhm), i_tr, p.psvr.n_tr)
 
@@ -77,4 +83,24 @@ for i_sub = 1:numel(p.subjects)
     % Save results
     pSVR_save(sub_id, p, predictions, results, 'grid');
 
+end
+
+% Save cross-validated results of grid-search pSVR analysis for each subject
+all_results = pSVR_load_results(p, 'grid');
+if isempty(all_results)
+    warning('Cannot save across-subject cross_validated reconstruction results.');
+    return;
+end
+% Run nested cross-validation across subjects to determine optimal values
+% for voxel-count and feature-space smoothing fwhm
+[bfca_cv, voxel_cv, fwhm_cv] = pSVR_nested_cv(all_results, p);
+
+for i_sub = 1:numel(p.subjects)
+    % Save results file
+    sub_str = num2str(p.subjects(i_sub),'%02i');
+    bfca = bfca_cv(i_sub,:); voxel = voxel_cv(:,i_sub); fwhm = fwhm_cv(:,i_sub);
+    bfca_dir = fullfile(p.dirs.data, 'analysis', ['sub-' sub_str], 'results');
+    if ~exist(bfca_dir, 'dir'), mkdir(bfca_dir); end
+    bfca_file = fullfile(bfca_dir, ['bfca_' p.psvr.label '_' p.psvr.roi '.mat']);
+    save(bfca_file, 'bfca', 'voxel', 'fwhm', '-v7.3');
 end

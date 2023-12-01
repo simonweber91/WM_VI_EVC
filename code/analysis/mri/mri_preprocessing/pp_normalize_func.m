@@ -19,6 +19,7 @@ function model = pp_normalize_func(sub_id, p)
 % Exptract relevant variables from p
 data_dir                = p.dirs.data;
 n_ses                   = p.n_session;
+filter                  = p.img.filter;
 
 % Get subject ID as string
 sub_str                 = num2str(sub_id,'%02i');
@@ -45,7 +46,9 @@ elseif n_ses == 1
     check_file = dir(fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'func', ['warsub*' filter '*']));
     deform_field = cellstr(spm_select('FPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'anat'), '^y_rsub.*.nii'));
     list = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'func'),['^arsub.*' filter]);
-    files{end+1} = cellstr(list);
+    if ~isempty(list)
+        files{end+1} = cellstr(list);
+    end
 end
 
 % Check if input files are present

@@ -21,6 +21,7 @@ n_run                   = p.n_run;
 filter                  = p.img.filter;
 n_slice                 = p.img.n_slice;
 tr                      = p.img.tr;
+pp_filter               = p.lvl1.pp_filter;
 title                   = p.lvl1.title;
 conditions              = p.lvl1.conditions;
 
@@ -31,7 +32,7 @@ sub_str                 = num2str(sub_id,'%02i');
 model = {};
 
 % Check if input data is available
-check_files = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'ses-01', 'func'), ['^rsub.*' filter '.*run-01.*']);
+check_files = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'ses-01', 'func'), ['^' pp_filter 'sub.*' filter '.*run-01.*']);
 if isempty(check_files)
     warning('Subject %d - no input data found, can''t perform 1st level specification.', sub_id)
     return;
@@ -83,7 +84,7 @@ if ~exist(fullfile(out_dir,'SPM.mat'),'file')
 
             % List input images
             % Use only realigned images
-            list = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], ['ses-' ses_str], 'func'), ['^rsub.*' filter '.*run-' run_str]);
+            list = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], ['ses-' ses_str], 'func'), ['^' pp_filter 'sub.*' filter '.*run-' run_str]);
             if ~isempty(list)
                 files = cellstr(list);
             end
@@ -96,8 +97,8 @@ if ~exist(fullfile(out_dir,'SPM.mat'),'file')
                 % Condition onsets
                 cond_onsets = onsets(ct).(conditions{i_cond});
                 if strcmp(conditions{i_cond},'delay')
-                    model{1}.spm.stats.fmri_spec.sess(ct).cond(i_cond).onset = cond_onsets+2; 
-                    model{1}.spm.stats.fmri_spec.sess(ct).cond(i_cond).duration = 6.4;
+                    model{1}.spm.stats.fmri_spec.sess(ct).cond(i_cond).onset = cond_onsets; 
+                    model{1}.spm.stats.fmri_spec.sess(ct).cond(i_cond).duration = 10;
                 else
                     model{1}.spm.stats.fmri_spec.sess(ct).cond(i_cond).onset = cond_onsets; 
                     model{1}.spm.stats.fmri_spec.sess(ct).cond(i_cond).duration = 0; % duration (0 for events)

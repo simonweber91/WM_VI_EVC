@@ -27,16 +27,23 @@ sub_str                 = num2str(sub_id,'%02i');
 model = {};
 
 % Get input images (coregistered, bias-field corrected T1 and deformation field)
+files = {};
 if n_ses > 1
     % Check if output images already exist
     check_file = dir(fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'ses-01', 'anat', ['wmrsub*']));
     deform_field = cellstr(spm_select('FPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'ses-01', 'anat'), '^y_rsub.*.nii'));
-    files = cellstr(spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'ses-01', 'anat'), '^mrsub.*T1w.nii'));
+    list = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'ses-01', 'anat'), '^mrsub.*T1w.nii');
+    if ~isempty(list)
+        files{end+1} = cellstr(list);
+    end
 elseif n_ses == 1
     % Check if output images already exist
     check_file = dir(fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'anat', ['wmrsub*']));
     deform_field = cellstr(spm_select('FPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'anat'), '^y_rsub.*.nii'));
-    files = cellstr(spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'anat'), '^mrsub.*T1w.nii'));
+    list = spm_select('ExtFPList', fullfile(data_dir, 'Nifti', ['sub-' sub_str], 'anat'), '^mrsub.*T1w.nii');
+    if ~isempty(list)
+        files{end+1} = cellstr(list);
+    end
 end
 
 % Check if input files are present

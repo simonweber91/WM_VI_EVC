@@ -38,6 +38,10 @@ switch roi_name
         maps = [1:6];
     case 'V1'
         maps = [1:2];
+    case 'V2'
+        maps = [3:4];
+    case 'V3'
+        maps = [5:6];
 end
 
 

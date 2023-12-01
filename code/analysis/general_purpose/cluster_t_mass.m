@@ -64,7 +64,7 @@ tmass_stats.empirical.clusters = emp_cl;
 tmass_stats.empirical.cluster_t = emp_t;
 
 % If only empirical results exist, return
-if n_perm == 1
+if n_perm == 0
     tmass_stats.empirical.cluster_p = NaN;
     tmass_stats.t_mass = NaN;
     tmass_stats.alpha = NaN;
